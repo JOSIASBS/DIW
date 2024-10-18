@@ -24,14 +24,18 @@
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_POST['email'];
         $password = $_POST['password'];
+        
 
         $sql = "SELECT * FROM usuarios WHERE Usuario_email = '$email'";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            // Verificar la contraseña
-            if (password_verify($password, $user['Usuario_clave'])) {
+            $hashed_password = md5($password);
+           
+    echo "Contraseña almacenada (hasheada): " . $user['Usuario_clave'] . "<br>";
+           
+            if ($hashed_password==$user['Usuario_clave']) {
                 $_SESSION['Usuario_nombre'] = $user['Usuario_nombre'];
                 header("Location: home.php");
             } else {

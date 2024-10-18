@@ -30,26 +30,26 @@
         $password = $_POST['password'];
         $confirm_password = $_POST['confirm_password'];
 
-        // Verificar que las contraseñas coincidan
+        
         if ($password !== $confirm_password) {
             echo "<p>Las contraseñas no coinciden</p>";
         } else {
-            // Verificar que el correo no esté registrado
+         
             $sql = "SELECT * FROM usuarios WHERE Usuario_email = '$email'";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 echo "<p>El correo ya está registrado</p>";
             } else {
-                // Encriptar la contraseña
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                
+                $hashed_password = md5($password);
 
-                // Insertar nuevo usuario en la base de datos
+                
                 $sql = "INSERT INTO usuarios (Usuario_nombre, Usuario_email, Usuario_clave) VALUES ('$name', '$email', '$hashed_password')";
                 
                 if ($conn->query($sql) === TRUE) {
                     echo "<p>Registro exitoso. Ahora puedes iniciar sesión.</p>";
-                    header("Refresh:2; url=login.php"); // Redirecciona a login.php tras 2 segundos
+                    header("Refresh:2; url=login.php"); 
                 } else {
                     echo "<p>Error: " . $conn->error . "</p>";
                 }
